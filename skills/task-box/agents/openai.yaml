@@ -1,0 +1,4 @@
+interface:
+  display_name: "任务收纳"
+  short_description: "根据任务类型自动建立独立工作目录并有序管理全部产出文件"
+  default_prompt: "使用 $task-box 为这个新任务建立独立、有序且按需生成的工作目录。"
