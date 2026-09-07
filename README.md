@@ -1,4 +1,4 @@
-#Task Box
+# Task Box 任务收纳
 
 让 Codex 为独立任务建立清晰的工作目录，避免多个任务的素材、过程文件和成品混在一起。
 
@@ -29,7 +29,9 @@
 
 ## 安装
 
-在 Windows PowerShell 中执行：
+### Windows
+
+在 PowerShell 中执行：
 
 ```powershell
 Set-ExecutionPolicy -Scope Process Bypass
@@ -45,10 +47,34 @@ Set-ExecutionPolicy -Scope Process Bypass
 
 如果另一台电脑已有自己的 `AGENTS.md`，建议只合并本仓库的“任务收纳”章节。
 
+### macOS
+
+先确认已安装 PowerShell。未安装时可使用 Homebrew：
+
+```bash
+brew install --cask powershell
+```
+
+然后下载仓库并执行安装脚本：
+
+```bash
+git clone https://github.com/qeyer/codex-task-box.git
+cd codex-task-box
+pwsh ./install.ps1
+```
+
+安装位置为 `~/.codex/skills/task-box` 和 `~/.codex/AGENTS.md`。安装完成后重新打开 Codex，或新建一个 Codex 会话。
+
 ## 验证
 
 ```powershell
 python "$HOME\.codex\skills\task-box\scripts\test_create_workspace.py"
+```
+
+macOS：
+
+```bash
+python3 "$HOME/.codex/skills/task-box/scripts/test_create_workspace.py"
 ```
 
 脚本计划示例见 `skills/task-box/references/example-plan.json`，目录判断说明见 `skills/task-box/references/directory-decision-guide.md`。
