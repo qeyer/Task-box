@@ -110,14 +110,29 @@ def render_task_note(task_name, goal, project_root, folders, deliverables):
 
 ## 工作约束
 
-- 本任务新增内容只放在当前任务目录中。
+- 本任务过程文件放在当前任务目录中；仓库源码遵循原有结构，用户指定位置优先。
 - 只创建实际需要的子目录，不为套模板预建空目录。
-- 移动、覆盖或删除既有文件前必须单独确认。
+- 不为整理擅自移动、覆盖或删除既有文件；已授权修改无需重复确认。
+
+## 当前成品
+
+尚未生成。交付时更新为实际成品的相对链接。
+
+## 素材与续做
+
+- 素材位置：待记录
+- 下一步：按任务目标执行
+- 关键决定：暂无
 """
 
 
 def create_workspace(plan):
     root, task_name, folder_name, goal, folders, deliverables = validate_plan(plan)
+    create_note = plan.get("create_note", False)
+    if not isinstance(create_note, bool):
+        raise ValueError("create_note 必须是布尔值")
+    if create_note and not any(item["path"] == Path("工作文件") for item in folders):
+        folders.append({"path": Path("工作文件"), "purpose": "过程文件和任务记录"})
     task_dir = (root / folder_name).resolve()
     if task_dir.parent != root:
         raise ValueError("task_folder 必须直接位于 project_root 下")
@@ -129,9 +144,10 @@ def create_workspace(plan):
             raise ValueError(f"folders 路径越界：{item['path']}")
     task_dir.mkdir()
     for item in folders:
-        (task_dir / item["path"]).mkdir(parents=True)
-    note = render_task_note(task_name, goal, root, folders, deliverables)
-    (task_dir / "任务说明.md").write_text(note, encoding="utf-8")
+        (task_dir / item["path"]).mkdir(parents=True, exist_ok=True)
+    if create_note:
+        note = render_task_note(task_name, goal, root, folders, deliverables)
+        (task_dir / "工作文件" / "任务记录.md").write_text(note, encoding="utf-8")
     return task_dir
 
 

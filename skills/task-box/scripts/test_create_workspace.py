@@ -14,6 +14,7 @@ class CreateWorkspaceTests(unittest.TestCase):
                 "task_name": "口播字幕包装",
                 "task_folder": "口播字幕包装",
                 "goal": "完成一套口播字幕视觉包装",
+                "create_note": True,
                 "folders": [
                     {"path": "原始素材", "purpose": "视频、音频和字幕源文件"},
                     {"path": "工作文件/脚本", "purpose": "处理脚本"},
@@ -28,9 +29,38 @@ class CreateWorkspaceTests(unittest.TestCase):
             self.assertTrue((task_dir / "工作文件" / "脚本").is_dir())
             self.assertTrue((task_dir / "最终成品").is_dir())
             self.assertFalse((task_dir / "预览").exists())
-            note = (task_dir / "任务说明.md").read_text(encoding="utf-8")
+            self.assertFalse((task_dir / "任务说明.md").exists())
+            note = (task_dir / "工作文件" / "任务记录.md").read_text(encoding="utf-8")
             self.assertIn("完成一套口播字幕视觉包装", note)
             self.assertIn("工作文件/脚本", note)
+
+    def test_no_note_by_default(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            result = create_workspace({
+                "project_root": tmp, "task_name": "简单任务",
+                "task_folder": "简单任务", "goal": "交付文件",
+                "folders": [{"path": "成品"}],
+            })
+            self.assertEqual([p.name for p in result.iterdir()], ["成品"])
+
+    def test_note_creates_work_folder(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            result = create_workspace({
+                "project_root": tmp, "task_name": "续做",
+                "task_folder": "续做", "goal": "记录进度",
+                "create_note": True,
+            })
+            self.assertTrue((result / "工作文件" / "任务记录.md").is_file())
+            self.assertTrue(all(p.is_dir() for p in result.iterdir()))
+
+    def test_invalid_note_option_does_not_create_task(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with self.assertRaises(ValueError):
+                create_workspace({
+                    "project_root": tmp, "task_name": "测试",
+                    "task_folder": "测试", "goal": "测试", "create_note": "false",
+                })
+            self.assertFalse((Path(tmp) / "测试").exists())
 
     def test_rejects_path_escape(self):
         with tempfile.TemporaryDirectory() as tmp:
