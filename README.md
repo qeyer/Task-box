@@ -27,43 +27,26 @@
 
 没有对应内容就不创建目录。一次性简单任务不强制生成任务记录；需要续做、交接或管理待办时，才在 `工作文件/任务记录.md` 建立记录。旧任务已有 `任务说明.md` 时继续复用，不自动移动或重命名。
 
-## 安装
+## 快速安装
 
-### Windows
+把下面这句话发给你的 Codex：
 
-在 PowerShell 中执行：
-
-```powershell
-Set-ExecutionPolicy -Scope Process Bypass
-.\install.ps1
+```text
+帮我安装这个 Skill：https://github.com/qeyer/codex-task-box
 ```
 
-安装到当前用户：
+Codex 会读取仓库、找到 `task-box`，并完成安装。
 
-- `~\.codex\skills\task-box`
-- `~\.codex\AGENTS.md` 中的“任务收纳”章节
+## 手动安装
 
-已有全局 `AGENTS.md` 时，安装脚本不会覆盖它，只会在缺少任务收纳章节时追加规则。已有 Skill 会先备份到同级的 `task-box.backup-时间戳` 目录。
+如果 Codex 不支持直接安装：
 
-如果另一台电脑已有自己的 `AGENTS.md`，建议只合并本仓库的“任务收纳”章节。
+1. 下载并解压本仓库。
+2. 将 `skills/task-box` 复制到 `~/.codex/skills/task-box`。
+3. 将本仓库 `AGENTS.md` 中的“任务收纳”章节合并到 `~/.codex/AGENTS.md`。
+4. 重新打开 Codex，或新建一个 Codex 会话。
 
-### macOS
-
-先确认已安装 PowerShell。未安装时可使用 Homebrew：
-
-```bash
-brew install --cask powershell
-```
-
-然后下载仓库并执行安装脚本：
-
-```bash
-git clone https://github.com/qeyer/codex-task-box.git
-cd codex-task-box
-pwsh ./install.ps1
-```
-
-安装位置为 `~/.codex/skills/task-box` 和 `~/.codex/AGENTS.md`。安装完成后重新打开 Codex，或新建一个 Codex 会话。
+`install.ps1` 仅作为 Windows 的辅助安装脚本，不作为主要安装方式。
 
 ## 验证
 
