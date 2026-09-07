@@ -1,4 +1,4 @@
-# Codex Task Box
+#Task Box
 
 让 Codex 为独立任务建立清晰的工作目录，避免多个任务的素材、过程文件和成品混在一起。
 
